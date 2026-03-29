@@ -2,6 +2,8 @@
 "use client";
 
 import { useState } from "react";
+// 1. IMPORT IMAGE COMPONENT
+import Image from "next/image";
 
 export default function Home() {
   // --- STATE MANAGEMENT ---
@@ -61,11 +63,24 @@ export default function Home() {
       <main className="min-h-screen bg-[#0B0D13] text-white flex flex-col items-center justify-center p-6 font-sans">
         <div className="max-w-2xl w-full space-y-8">
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight">LAICENSE</h1>
-            <h2 className="text-xl md:text-2xl text-slate-300">
+            {/* 2. REPLACE H1 START */}
+            {/* Standardizing horizontal alignment and applying a responsive size */}
+           <div className="space-y-4">
+            <Image
+              src="/Logo.svg" 
+              alt="LAICENSE AI Logo"
+              width={400}
+              height={100}
+              // Notice the -ml-2 right at the start of the className
+              className="-ml-2 w-48 md:w-64 h-auto object-contain object-left mb-2" 
+              priority
+            />
+            <h2 className="text-xl md:text-2xl text-slate-300 pt-2">
               Find the right open-source license in under a minute
             </h2>
           </div>
+          </div>
+
 
           <div className="space-y-6">
             <p className="text-slate-400 text-lg leading-relaxed max-w-xl">
@@ -149,9 +164,10 @@ export default function Home() {
   // --- UI: 4. FINAL RESULTS SCREEN ---
   if (currentData && currentData.status === "recommendation") {
     return (
-      <main className="min-h-screen bg-[#0B0D13] text-white flex flex-col items-center justify-center p-6 font-sans">
+      <main className="min-h-screen bg-[#0B0D13] text-white flex flex-col items-center justify-center p-6 font-sans py-12">
         <div className="max-w-3xl w-full space-y-8 animate-in fade-in zoom-in-95 duration-500">
           
+          {/* Main Recommendation Header */}
           <div className="text-center space-y-4">
             <h2 className="text-violet-400 font-semibold tracking-wider uppercase text-sm">Recommended License</h2>
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight">{currentData.recommended_license}</h1>
@@ -160,6 +176,7 @@ export default function Home() {
             </p>
           </div>
 
+          {/* Pros and Cons Grid */}
           <div className="grid md:grid-cols-2 gap-6 mt-12">
             {/* Pros Card */}
             <div className="bg-slate-900/50 border border-emerald-900/50 rounded-xl p-6">
@@ -168,7 +185,7 @@ export default function Home() {
                 What this allows
               </h3>
               <ul className="space-y-3 text-slate-300">
-                {currentData.pros.map((pro: string, idx: number) => (
+                {currentData.pros?.map((pro: string, idx: number) => (
                   <li key={idx} className="flex gap-3 text-sm leading-relaxed">
                     <span className="text-emerald-500">•</span> {pro}
                   </li>
@@ -183,7 +200,7 @@ export default function Home() {
                 Limitations & Conditions
               </h3>
               <ul className="space-y-3 text-slate-300">
-                {currentData.cons.map((con: string, idx: number) => (
+                {currentData.cons?.map((con: string, idx: number) => (
                   <li key={idx} className="flex gap-3 text-sm leading-relaxed">
                     <span className="text-rose-500">•</span> {con}
                   </li>
@@ -191,6 +208,21 @@ export default function Home() {
               </ul>
             </div>
           </div>
+
+          {/* NEW: Similar Alternatives Section */}
+          {currentData.similar_alternatives && currentData.similar_alternatives.length > 0 && (
+            <div className="mt-10 pt-8 border-t border-slate-800/80">
+              <h3 className="text-lg font-medium text-slate-300 mb-5">Similar Alternatives</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {currentData.similar_alternatives.map((alt: any, idx: number) => (
+                  <div key={idx} className="bg-slate-800/40 border border-slate-700/60 rounded-lg p-5 hover:bg-slate-800/60 transition-colors">
+                    <h4 className="text-violet-300 font-semibold mb-2">{alt.name}</h4>
+                    <p className="text-sm text-slate-400 leading-relaxed">{alt.comparison}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12 pt-8 border-t border-slate-800/50">
