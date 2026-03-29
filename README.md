@@ -1,57 +1,108 @@
-# Project Documentation: LAICENSE
+<p align="center">
+  <img src="public/logo.svg" alt="LAICENSE Logo" width="400" />
+</p>
 
-## 1. Project Overview
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Gemini_2.5_Flash-5F6368?style=for-the-badge&logo=google&logoColor=white" alt="Gemini 2.5 Flash">
+</p>
 
-**Name:** LAICENSE 
-**Type:** Web-based Developer Tool / AI Application 
-**Description:** LAICENSE is an interactive, AI-driven tool designed to help developers effortlessly choose the right open-source software license for their projects. Instead of reading through dense legal jargon, the user interacts with an "Akinator-style" AI that asks a series of dynamic, context-aware questions. Within 3 to 5 questions, the tool recommends the most suitable standard license (e.g., MIT, GPLv3, Apache 2.0).
+<h1 align="center">Find the right open-source license in under a minute</h1>
 
-## 2. Target Audience
+<p align="center">
+  An AI-powered, interactive consultant that helps developers choose the perfect OSI-approved open-source license for their projects by asking simple, jargon-free questions.
+</p>
 
-* Solo developers and hobbyists releasing their first public repositories.
-* Startup founders looking for quick guidance on software distribution.
-* Open-source contributors who need to understand the implications of different licenses.
+---
 
-## 3. Core Features
+## 📖 About LAICENSE
 
-* **Dynamic Q&A Engine:** The AI generates the next question based strictly on the user's previous answer.
-* **Strict Turn Limit:** The interaction is capped at a minimum of 3 and a maximum of 5 questions to respect the user's time.
-* **Curated Recommendations:** The tool only recommends widely accepted Open Source Initiative (OSI) approved licenses.
-* **Plain English Summaries:** The final recommendation includes a simplified explanation of what the user CAN, CANNOT, and MUST do under the license.
-* **Minimalist UI:** A clean, distraction-free interface focusing on one question at a time.
+Choosing an open-source license can be intimidating. Developers often get bogged down in legal jargon like "copyleft," "patent retaliation," and "network SaaS restrictions." 
 
-## 4. Technology Stack (Detailed)
+**LAICENSE** simplifies this process. Instead of expecting you to understand legal terminology, it acts like a human consultant. It asks 3 to 5 straightforward, scenario-based questions (e.g., *"If someone changes your code, must they share their new version publicly?"*) and intelligently narrows down a definitive list of 13 standard open-source licenses to find the exact right fit for your project.
 
-To ensure rapid development, a modern user interface, and strict API key security without needing a separate backend server, the project will use the following stack:
+## ✨ Features
 
-* **Frontend & Framework:** Next.js (React). Next.js allows the creation of the user interface using React components while providing secure "Route Handlers". This ensures the AI API keys are kept safely on the server-side and never exposed to the user's browser.
-* **Styling & UI:** Tailwind CSS. Used for rapid, utility-first styling to create a clean, minimalist design. Optional addition: Framer Motion for smooth slide-in transitions between questions.
-* **AI Integration:** Google Gemini API. Chosen for its speed and ability to force structured JSON outputs, ensuring the frontend always receives clean data to render (questions and button options).
-* **Deployment:** Vercel. Provides seamless, zero-configuration deployment for Next.js applications, automatically handling the serverless backend functions needed for the AI calls.
+- **Jargon-Free:** Zero legal terminology during the questionnaire. Everything is translated into plain English.
+- **Lightning Fast:** Get a definitive recommendation in less than 60 seconds (3-5 turns max).
+- **Comprehensive Results:** Provides the recommended license, a short summary, what it allows (Pros), its limitations (Cons), official reading links, and similar alternatives from different license categories to show tradeoffs.
+- **Fail-Safe UI:** Includes robust error handling to prevent infinite loading if the AI model drops connection.
 
-## 5. Application Workflow
 
-1. **Welcome Screen:** User lands on the page, sees a brief explanation and a prominent legal disclaimer, and clicks "Start".
-2. **Initial Prompt:** The Next.js frontend calls a secure internal API route. The server sends a system prompt to the AI, initiating the first question.
-3. **User Input:** User answers via dynamic buttons generated by the AI (e.g., Yes / No / Not Sure).
-4. **Evaluation Loop (Questions 2-4):** * The app appends the user's answer to the conversation history and sends it back to the AI via the secure Next.js API route.
-   * The AI decides if it has enough info to recommend a license OR generates the next logical question and multiple-choice options.
-5. **Conclusion (Question 3, 4, or 5):** The AI hits its certainty threshold or the 5-question limit.
-6. **Result Screen:** The AI outputs a JSON object containing the recommended license, a short summary, pros, cons, and an official link. The Next.js frontend renders this final result card.
+---
 
-## 6. AI System Rules (Prompt Constraints)
+## 🧠 The AI Logic & Implementation
 
-The AI is constrained by a strict system prompt to act as a programmatic logic engine:
+Unlike typical AI wrappers that might hallucinate non-existent licenses or give varying legal advice, LAICENSE uses a **Strict Deterministic AI Architecture**. The AI does not invent answers; it acts as a smart filter for a hardcoded database.
 
-* **Role:** Expert software licensing assistant.
-* **Task:** Determine the best OSI-approved license for the user's project by asking a maximum of 5 questions.
-* **Behavior:** * Ask exactly ONE question at a time.
-  * Provide 2 to 4 short answer options for the user to click.
-  * Never invent licenses. Only choose from: MIT, Apache 2.0, GNU GPLv3, GNU AGPLv3, GNU LGPLv3, BSD 2-Clause, BSD 3-Clause, Mozilla Public License 2.0, or Unlicense.
-* **Output Format:** Respond ONLY in structured JSON (either a "question" schema or a "recommendation" schema) so the frontend can parse the UI cleanly.
+### 1. The Authoritative Database
+The application relies on a hardcoded, server-side array of 13 meticulously categorized OSI-approved licenses:
+- **Public Domain:** The Unlicense, CC0 1.0
+- **Permissive:** MIT, Apache 2.0, BSD 2-Clause, BSD 3-Clause, Boost 1.0
+- **Weak Copyleft:** MPL 2.0, EPL 2.0, LGPL v2.1
+- **Strong Copyleft:** GPL v2.0, GPL v3.0, AGPL v3.0
 
-## 7. Legal Disclaimer
+The AI is strictly instructed to *only* recommend licenses from this injected database.
 
-A mandatory disclaimer must be visible on the site:
+### 2. The "Akinator" Strategy
+The system prompt instructs the AI (powered by `gemini-2.5-flash`) to play a binary search game. On every turn, the AI looks at the remaining candidate licenses and calculates which trait splits the pool as evenly in half as possible. 
 
-> **Disclaimer:** LAICENSE provides informational guidance based on standard open-source practices. It does not constitute official legal advice. Always consult with a qualified attorney for complex legal decisions regarding intellectual property and software licensing.
+### 3. Server-Side State Injection
+To prevent context window degradation and role-alternation crashes, the app derives the `turnNumber` and a `maybeStreakCount` on the server before calling the LLM.
+- If the user answers "Maybe" twice in a row, the AI uses the streak count to treat the answer as a "No", forcing elimination and preventing infinite loops.
+- The AI is hard-capped to make a final recommendation by Turn 5.
+
+### 4. Strict JSON Output Schema
+To seamlessly integrate with the React frontend, the model is configured with `responseMimeType: "application/json"`. It conditionally returns one of two strict schemas:
+- **Schema A (Question):** The next plain-English question and options ["Yes", "No", "Maybe"].
+- **Schema B (Recommendation):** The final output containing the recommended license, pros, cons, and similar alternatives.
+
+
+
+## 🚀 Getting Started
+
+To run LAICENSE locally on your machine:
+
+1. **Clone the repository:**
+   ```bash
+   git clone 
+   https://github.com/Georgebruh/Laicense.io.git
+   cd laicense.io
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Set up environment variables:**
+   Create a `.env.local` file in the root and add your Gemini key:
+   ```bash
+   GEMINI_API_KEY=your_api_key_here
+   ```
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+5. **Open in browser:**
+   Navigate to `http://localhost:3000`.
+
+## ⚖️ Legal Disclaimer
+
+LAICENSE provides informational guidance based on standard open-source practices. This application and its AI-generated recommendations do not constitute official legal advice. Always consult a qualified attorney for legal decisions regarding intellectual property and software licensing.
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make to LAICENSE are greatly appreciated.
+
+- Fork the Project
+- Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+- Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+- Push to the Branch (`git push origin feature/AmazingFeature`)
+- Open a Pull Request
+
+## 📝 License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+(Irony noted: an app that helps you choose a license, using the MIT license itself!)
